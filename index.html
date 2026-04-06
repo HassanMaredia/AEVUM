@@ -1,0 +1,1716 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>AEVUM — The Icon</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;1,300;1,400&family=Montserrat:wght@200;300;400;500&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --black: #080808;
+    --white: #f5f5f0;
+    --gray-dark: #1a1a1a;
+    --gray-mid: #3a3a3a;
+    --gray-light: #8a8a8a;
+    --gray-ultra: #c8c8c0;
+    --gold: #b8a882;
+    --gold-light: #d4c4a0;
+    --serif: 'Cormorant Garamond', serif;
+    --sans: 'Montserrat', sans-serif;
+  }
+
+  *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+
+  html { scroll-behavior: smooth; cursor: none; }
+
+  body {
+    background: var(--black);
+    color: var(--white);
+    font-family: var(--sans);
+    font-weight: 300;
+    overflow-x: hidden;
+  }
+
+  /* Custom Cursor */
+  #cursor-ring {
+    position: fixed;
+    width: 36px; height: 36px;
+    border: 4px solid rgba(245,245,240,0.4);
+    border-radius: 50%;
+    pointer-events: none;
+    z-index: 9998;
+    transform: translate(-50%, -50%);
+    transition: transform 0.15s ease-out, width 0.3s, height 0.3s, border-color 0.3s;
+  }
+
+  body:hover #cursor { opacity: 1; }
+
+  /* NAV */
+  nav {
+    position: fixed;
+    top: 0; left: 0; right: 0;
+    z-index: 1000;
+    padding: 28px 60px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    transition: background 0.6s ease, padding 0.4s ease;
+  }
+
+  nav.scrolled {
+    background: rgba(8,8,8,0.92);
+    backdrop-filter: blur(20px);
+    padding: 18px 60px;
+    border-bottom: 1px solid rgba(245,245,240,0.06);
+  }
+
+  .nav-logo {
+    font-family: var(--serif);
+    font-size: 22px;
+    font-weight: 300;
+    letter-spacing: 0.35em;
+    text-transform: uppercase;
+    color: var(--white);
+    text-decoration: none;
+  }
+
+  .nav-links {
+    display: flex;
+    gap: 48px;
+    list-style: none;
+  }
+
+  .nav-links a {
+    font-family: var(--sans);
+    font-size: 10px;
+    font-weight: 400;
+    letter-spacing: 0.25em;
+    text-transform: uppercase;
+    color: rgba(245,245,240,0.65);
+    text-decoration: none;
+    transition: color 0.3s;
+  }
+
+  .nav-links a:hover { color: var(--white); }
+
+  .nav-cta {
+    font-family: var(--sans);
+    font-size: 10px;
+    font-weight: 400;
+    letter-spacing: 0.25em;
+    text-transform: uppercase;
+    color: var(--black);
+    background: var(--white);
+    padding: 11px 28px;
+    text-decoration: none;
+    transition: background 0.3s, color 0.3s;
+  }
+
+  .nav-cta:hover { background: var(--gold); color: var(--black); }
+
+  /* HERO */
+  #hero {
+    position: relative;
+    height: 100vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    overflow: hidden;
+    background: var(--black);
+  }
+
+  .hero-bg {
+    position: absolute;
+    inset: 0;
+    background: 
+      radial-gradient(ellipse 70% 90% at 50% 60%, rgba(184,168,130,0.07) 0%, transparent 65%),
+      radial-gradient(ellipse 40% 40% at 70% 30%, rgba(245,245,240,0.03) 0%, transparent 50%);
+  }
+
+  /* ── ZOOM WRAPPER ── */
+  .hero-watch-wrap {
+    position: absolute;
+    inset: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    will-change: transform;
+    /* JS drives transform + opacity via inline style */
+  }
+
+  .hero-watch-svg {
+    width: min(560px, 72vw);
+    opacity: 0;
+    transform: scale(0.88) translateY(30px);
+    animation: heroWatchIn 2.2s cubic-bezier(0.16,1,0.3,1) 0.4s forwards;
+    filter: drop-shadow(0 0 80px rgba(184,168,130,0.18)) drop-shadow(0 40px 80px rgba(0,0,0,0.9));
+    /* after the intro animation, JS takes over scale via parent wrapper */
+  }
+
+  @keyframes heroWatchIn {
+    to { opacity: 1; transform: scale(1) translateY(0); }
+  }
+
+  .hero-vignette {
+    position: absolute;
+    inset: 0;
+    background: 
+      radial-gradient(ellipse 100% 50% at 50% 0%, rgba(8,8,8,0.6) 0%, transparent 60%),
+      radial-gradient(ellipse 100% 50% at 50% 100%, rgba(8,8,8,0.9) 0%, transparent 60%),
+      radial-gradient(ellipse 30% 100% at 0% 50%, rgba(8,8,8,0.7) 0%, transparent 50%),
+      radial-gradient(ellipse 30% 100% at 100% 50%, rgba(8,8,8,0.7) 0%, transparent 50%);
+    pointer-events: none;
+  }
+
+  .hero-content {
+    position: relative;
+    z-index: 2;
+    text-align: center;
+    pointer-events: none;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+  }
+
+  .hero-eyebrow {
+    font-family: var(--sans);
+    font-size: 10px;
+    font-weight: 400;
+    letter-spacing: 0.45em;
+    text-transform: uppercase;
+    color: var(--gold);
+    opacity: 0;
+    animation: fadeUp 1s ease 1.6s forwards;
+    margin-bottom: 28px;
+  }
+
+  .hero-title {
+    font-family: var(--serif);
+    font-size: clamp(72px, 11vw, 160px);
+    font-weight: 300;
+    line-height: 0.92;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: var(--white);
+    opacity: 0;
+    animation: fadeUp 1.2s cubic-bezier(0.16,1,0.3,1) 1.9s forwards;
+  }
+
+  .hero-title em {
+    font-style: italic;
+    color: rgba(245,245,240,0.45);
+    display: block;
+    font-size: 0.55em;
+    letter-spacing: 0.18em;
+    margin-top: 8px;
+  }
+
+  .hero-subtitle {
+    font-family: var(--sans);
+    font-size: 11px;
+    font-weight: 300;
+    letter-spacing: 0.3em;
+    text-transform: uppercase;
+    color: rgba(245,245,240,0.45);
+    opacity: 0;
+    animation: fadeUp 1s ease 2.3s forwards;
+    margin-top: 36px;
+  }
+
+  .hero-line {
+    width: 1px;
+    height: 0;
+    background: var(--gold);
+    margin: 40px auto 0;
+    opacity: 0;
+    animation: lineGrow 1.2s ease 2.6s forwards;
+  }
+
+  @keyframes lineGrow {
+    to { height: 60px; opacity: 0.6; }
+  }
+
+  @keyframes fadeUp {
+    from { opacity: 0; transform: translateY(24px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+
+  /* SCROLL INDICATOR */
+  .scroll-indicator {
+    position: absolute;
+    bottom: 48px;
+    left: 50%;
+    transform: translateX(-50%);
+    z-index: 5;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 10px;
+    opacity: 0;
+    animation: fadeIn 1s ease 3.2s forwards;
+  }
+
+  .scroll-indicator span {
+    font-size: 9px;
+    letter-spacing: 0.4em;
+    text-transform: uppercase;
+    color: rgba(245,245,240,0.3);
+  }
+
+  .scroll-line {
+    width: 1px;
+    height: 48px;
+    background: linear-gradient(to bottom, rgba(184,168,130,0.6), transparent);
+    animation: scrollPulse 2s ease-in-out infinite 3.5s;
+  }
+
+  @keyframes scrollPulse {
+    0%, 100% { transform: scaleY(1); opacity: 0.6; }
+    50% { transform: scaleY(0.4); opacity: 0.2; }
+  }
+
+  @keyframes fadeIn {
+    to { opacity: 1; }
+  }
+
+  /* MARQUEE */
+  .marquee-strip {
+    background: rgba(184,168,130,0.08);
+    border-top: 1px solid rgba(184,168,130,0.12);
+    border-bottom: 1px solid rgba(184,168,130,0.12);
+    overflow: hidden;
+    padding: 16px 0;
+    white-space: nowrap;
+  }
+
+  .marquee-inner {
+    display: inline-flex;
+    gap: 0;
+    animation: marquee 28s linear infinite;
+  }
+
+  .marquee-item {
+    font-size: 9px;
+    letter-spacing: 0.45em;
+    text-transform: uppercase;
+    color: rgba(184,168,130,0.7);
+    padding: 0 60px;
+  }
+
+  .marquee-dot {
+    color: rgba(184,168,130,0.3);
+  }
+
+  @keyframes marquee {
+    from { transform: translateX(0); }
+    to { transform: translateX(-50%); }
+  }
+
+  /* CHAPTERS */
+  .chapter {
+    position: relative;
+    min-height: 100vh;
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    overflow: hidden;
+  }
+
+  .chapter.reverse { direction: rtl; }
+  .chapter.reverse > * { direction: ltr; }
+
+  .chapter-visual {
+    position: relative;
+    overflow: hidden;
+    min-height: 100vh;
+  }
+
+  .chapter-img {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    transition: transform 0.8s cubic-bezier(0.16,1,0.3,1);
+  }
+
+  .chapter:hover .chapter-img { transform: scale(1.04); }
+
+  .chapter-overlay {
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(135deg, rgba(8,8,8,0.4) 0%, rgba(8,8,8,0.1) 100%);
+  }
+
+  .chapter-content {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    padding: 100px 80px;
+    background: var(--black);
+    position: relative;
+  }
+
+  .chapter-content::before {
+    content: '';
+    position: absolute;
+    top: 0; bottom: 0;
+    width: 1px;
+    background: linear-gradient(to bottom, transparent, rgba(184,168,130,0.2), transparent);
+  }
+
+  .chapter.reverse .chapter-content::before { right: 0; left: auto; }
+  .chapter:not(.reverse) .chapter-content::before { left: 0; }
+
+  .chapter-num {
+    font-family: var(--serif);
+    font-size: 11px;
+    font-weight: 300;
+    letter-spacing: 0.4em;
+    text-transform: uppercase;
+    color: var(--gold);
+    margin-bottom: 28px;
+    opacity: 0;
+    transform: translateX(-20px);
+    transition: opacity 0.7s ease, transform 0.7s ease;
+  }
+
+  .chapter-title {
+    font-family: var(--serif);
+    font-size: clamp(44px, 5vw, 72px);
+    font-weight: 300;
+    line-height: 1.08;
+    color: var(--white);
+    margin-bottom: 28px;
+    opacity: 0;
+    transform: translateY(30px);
+    transition: opacity 0.8s ease 0.1s, transform 0.8s ease 0.1s;
+  }
+
+  .chapter-title em {
+    font-style: italic;
+    color: rgba(245,245,240,0.5);
+  }
+
+  .chapter-divider {
+    width: 40px;
+    height: 1px;
+    background: var(--gold);
+    margin-bottom: 28px;
+    opacity: 0;
+    transform: scaleX(0);
+    transform-origin: left;
+    transition: opacity 0.6s ease 0.2s, transform 0.7s ease 0.2s;
+  }
+
+  .chapter-text {
+    font-family: var(--sans);
+    font-size: 13px;
+    font-weight: 300;
+    line-height: 1.9;
+    color: rgba(245,245,240,0.55);
+    max-width: 360px;
+    opacity: 0;
+    transform: translateY(20px);
+    transition: opacity 0.8s ease 0.3s, transform 0.8s ease 0.3s;
+    margin-bottom: 48px;
+  }
+
+  .chapter-tag {
+    display: inline-flex;
+    align-items: center;
+    gap: 14px;
+    font-size: 9px;
+    letter-spacing: 0.4em;
+    text-transform: uppercase;
+    color: rgba(184,168,130,0.6);
+    opacity: 0;
+    transition: opacity 0.8s ease 0.4s;
+  }
+
+  .chapter-tag::before {
+    content: '';
+    width: 24px;
+    height: 1px;
+    background: var(--gold);
+    opacity: 0.4;
+  }
+
+  .chapter.in-view .chapter-num,
+  .chapter.in-view .chapter-title,
+  .chapter.in-view .chapter-text,
+  .chapter.in-view .chapter-tag { opacity: 1; transform: none; }
+
+  .chapter.in-view .chapter-divider { opacity: 1; transform: scaleX(1); }
+
+  /* CHAPTER VISUAL OVERLAYS */
+  .chapter-chapter-label {
+    position: absolute;
+    bottom: 48px;
+    right: 48px;
+    font-family: var(--serif);
+    font-size: 120px;
+    font-weight: 300;
+    color: rgba(245,245,240,0.04);
+    line-height: 1;
+    letter-spacing: -0.02em;
+    pointer-events: none;
+    user-select: none;
+  }
+
+  /* PRODUCT HIGHLIGHT */
+  #product {
+    min-height: 100vh;
+    background: var(--black);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    padding: 120px 60px;
+    text-align: center;
+    position: relative;
+    overflow: hidden;
+  }
+
+  #product::before {
+    content: '';
+    position: absolute;
+    width: 600px; height: 600px;
+    border-radius: 50%;
+    background: radial-gradient(circle, rgba(184,168,130,0.06) 0%, transparent 70%);
+    top: 50%; left: 50%;
+    transform: translate(-50%, -50%);
+  }
+
+  .product-eyebrow {
+    font-size: 9px;
+    letter-spacing: 0.45em;
+    text-transform: uppercase;
+    color: var(--gold);
+    margin-bottom: 60px;
+    opacity: 0;
+  }
+
+  .product-watch-container {
+    position: relative;
+    display: inline-block;
+    cursor: zoom-in;
+  }
+
+  .product-watch-svg {
+    width: min(380px, 55vw);
+    transition: transform 0.8s cubic-bezier(0.16,1,0.3,1), filter 0.8s ease;
+    filter: drop-shadow(0 20px 80px rgba(0,0,0,0.8)) drop-shadow(0 0 40px rgba(184,168,130,0.1));
+  }
+
+  .product-watch-container:hover .product-watch-svg {
+    transform: scale(1.12);
+    filter: drop-shadow(0 30px 100px rgba(0,0,0,0.9)) drop-shadow(0 0 60px rgba(184,168,130,0.2));
+  }
+
+  .product-watch-ring {
+    position: absolute;
+    inset: -20px;
+    border-radius: 50%;
+    border: 1px solid rgba(184,168,130,0.1);
+    transition: all 0.8s ease;
+    pointer-events: none;
+  }
+
+  .product-watch-container:hover .product-watch-ring {
+    border-color: rgba(184,168,130,0.25);
+    inset: -40px;
+  }
+
+  .product-title {
+    font-family: var(--serif);
+    font-size: clamp(48px, 7vw, 96px);
+    font-weight: 300;
+    letter-spacing: 0.08em;
+    color: var(--white);
+    margin: 60px 0 20px;
+    opacity: 0;
+  }
+
+  .product-subtitle {
+    font-family: var(--sans);
+    font-size: 11px;
+    font-weight: 300;
+    letter-spacing: 0.3em;
+    text-transform: uppercase;
+    color: rgba(245,245,240,0.4);
+    margin-bottom: 56px;
+    opacity: 0;
+  }
+
+  .product-cta {
+    display: inline-block;
+    font-family: var(--sans);
+    font-size: 10px;
+    font-weight: 400;
+    letter-spacing: 0.3em;
+    text-transform: uppercase;
+    color: var(--black);
+    background: var(--white);
+    padding: 18px 48px;
+    text-decoration: none;
+    transition: background 0.4s, color 0.4s, transform 0.3s;
+    opacity: 0;
+  }
+
+  .product-cta:hover {
+    background: var(--gold);
+    transform: translateY(-2px);
+  }
+
+  /* SPECS GRID */
+  #specs {
+    background: var(--gray-dark);
+    padding: 120px 80px;
+    position: relative;
+    overflow: hidden;
+  }
+
+  #specs::before {
+    content: '';
+    position: absolute;
+    top: 0; left: 0; right: 0;
+    height: 1px;
+    background: linear-gradient(to right, transparent, rgba(184,168,130,0.3), transparent);
+  }
+
+  .specs-header {
+    text-align: center;
+    margin-bottom: 100px;
+  }
+
+  .specs-eyebrow {
+    font-size: 9px;
+    letter-spacing: 0.45em;
+    text-transform: uppercase;
+    color: var(--gold);
+    margin-bottom: 20px;
+  }
+
+  .specs-title {
+    font-family: var(--serif);
+    font-size: clamp(36px, 5vw, 64px);
+    font-weight: 300;
+    color: var(--white);
+  }
+
+  .specs-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+    gap: 1px;
+    background: rgba(184,168,130,0.08);
+    border: 1px solid rgba(184,168,130,0.08);
+    max-width: 1200px;
+    margin: 0 auto;
+  }
+
+  .spec-item {
+    background: var(--gray-dark);
+    padding: 52px 40px;
+    transition: background 0.4s;
+    opacity: 0;
+    transform: translateY(30px);
+    transition: background 0.4s, opacity 0.6s ease, transform 0.6s ease;
+  }
+
+  .spec-item:hover { background: rgba(184,168,130,0.05); }
+
+  .spec-item.in-view { opacity: 1; transform: none; }
+
+  .spec-icon {
+    width: 32px;
+    height: 32px;
+    margin-bottom: 28px;
+    opacity: 0.6;
+  }
+
+  .spec-label {
+    font-size: 9px;
+    letter-spacing: 0.4em;
+    text-transform: uppercase;
+    color: var(--gold);
+    margin-bottom: 14px;
+  }
+
+  .spec-value {
+    font-family: var(--serif);
+    font-size: 26px;
+    font-weight: 300;
+    color: var(--white);
+    margin-bottom: 10px;
+    line-height: 1.2;
+  }
+
+  .spec-detail {
+    font-size: 11px;
+    font-weight: 300;
+    letter-spacing: 0.06em;
+    color: rgba(245,245,240,0.4);
+    line-height: 1.7;
+  }
+
+  /* VIDEO SECTION */
+  #video-section {
+    position: relative;
+    height: 90vh;
+    overflow: hidden;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: #000;
+  }
+
+  .video-bg {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(135deg, #0d0d0d 0%, #1a1a0d 50%, #0d0d0d 100%);
+  }
+
+  .video-cinematic {
+    position: absolute;
+    inset: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+  .video-watch-anim {
+    width: min(440px, 60vw);
+    animation: breathe 5s ease-in-out infinite;
+    filter: drop-shadow(0 0 80px rgba(184,168,130,0.15));
+  }
+
+  @keyframes breathe {
+    0%, 100% { transform: scale(1) rotate(0deg); filter: drop-shadow(0 0 80px rgba(184,168,130,0.15)); }
+    50% { transform: scale(1.02) rotate(0.5deg); filter: drop-shadow(0 0 120px rgba(184,168,130,0.25)); }
+  }
+
+  .video-overlay {
+    position: absolute;
+    inset: 0;
+    background: 
+      radial-gradient(ellipse 70% 70% at 50% 50%, rgba(8,8,8,0.4) 0%, rgba(8,8,8,0.8) 100%);
+  }
+
+  .video-content {
+    position: relative;
+    z-index: 2;
+    text-align: center;
+  }
+
+  .video-label {
+    display: inline-flex;
+    align-items: center;
+    gap: 16px;
+    font-size: 9px;
+    letter-spacing: 0.45em;
+    text-transform: uppercase;
+    color: rgba(184,168,130,0.7);
+    margin-bottom: 28px;
+  }
+
+  .video-label::before, .video-label::after {
+    content: '';
+    width: 30px;
+    height: 1px;
+    background: rgba(184,168,130,0.4);
+  }
+
+  .video-title {
+    font-family: var(--serif);
+    font-size: clamp(36px, 6vw, 80px);
+    font-weight: 300;
+    color: var(--white);
+    line-height: 1.1;
+  }
+
+  .video-title em {
+    font-style: italic;
+    color: rgba(245,245,240,0.4);
+  }
+
+  /* FOOTER */
+  footer {
+    background: var(--black);
+    padding: 80px;
+    border-top: 1px solid rgba(245,245,240,0.06);
+    position: relative;
+  }
+
+  .footer-inner {
+    display: grid;
+    grid-template-columns: 2fr 1fr 1fr 1fr;
+    gap: 60px;
+    max-width: 1200px;
+    margin: 0 auto 80px;
+  }
+
+  .footer-brand .brand-name {
+    font-family: var(--serif);
+    font-size: 28px;
+    font-weight: 300;
+    letter-spacing: 0.3em;
+    text-transform: uppercase;
+    color: var(--white);
+    margin-bottom: 20px;
+  }
+
+  .footer-brand p {
+    font-size: 12px;
+    font-weight: 300;
+    line-height: 1.9;
+    color: rgba(245,245,240,0.35);
+    max-width: 280px;
+  }
+
+  .footer-col h4 {
+    font-size: 9px;
+    letter-spacing: 0.4em;
+    text-transform: uppercase;
+    color: var(--gold);
+    margin-bottom: 28px;
+  }
+
+  .footer-col ul { list-style: none; }
+
+  .footer-col ul li { margin-bottom: 14px; }
+
+  .footer-col ul a {
+    font-size: 12px;
+    font-weight: 300;
+    letter-spacing: 0.06em;
+    color: rgba(245,245,240,0.45);
+    text-decoration: none;
+    transition: color 0.3s;
+  }
+
+  .footer-col ul a:hover { color: var(--white); }
+
+  .footer-bottom {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding-top: 40px;
+    border-top: 1px solid rgba(245,245,240,0.06);
+    max-width: 1200px;
+    margin: 0 auto;
+  }
+
+  .footer-copy {
+    font-size: 10px;
+    letter-spacing: 0.15em;
+    color: rgba(245,245,240,0.2);
+  }
+
+  .footer-socials {
+    display: flex;
+    gap: 28px;
+  }
+
+  .footer-socials a {
+    font-size: 9px;
+    letter-spacing: 0.35em;
+    text-transform: uppercase;
+    color: rgba(245,245,240,0.35);
+    text-decoration: none;
+    transition: color 0.3s;
+  }
+
+  .footer-socials a:hover { color: var(--gold); }
+
+  /* FLOATING GRAIN */
+  .grain {
+    position: fixed;
+    inset: 0;
+    z-index: 9990;
+    pointer-events: none;
+    opacity: 0.025;
+    background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)'/%3E%3C/svg%3E");
+    background-size: 200px 200px;
+    animation: grainAnim 0.5s steps(2) infinite;
+  }
+
+  @keyframes grainAnim {
+    0% { transform: translate(0, 0); }
+    25% { transform: translate(-2px, 3px); }
+    50% { transform: translate(3px, -1px); }
+    75% { transform: translate(-1px, -3px); }
+    100% { transform: translate(2px, 2px); }
+  }
+
+  /* UTILS */
+  .reveal { opacity: 0; transform: translateY(40px); transition: opacity 0.9s ease, transform 0.9s ease; }
+  .reveal.in-view { opacity: 1; transform: none; }
+
+  .reveal-delay-1 { transition-delay: 0.1s; }
+  .reveal-delay-2 { transition-delay: 0.2s; }
+  .reveal-delay-3 { transition-delay: 0.3s; }
+
+  /* MOBILE */
+  @media (max-width: 768px) {
+    nav { padding: 20px 24px; }
+    nav.scrolled { padding: 14px 24px; }
+    .nav-links { display: none; }
+    .nav-cta { display: none; }
+
+    .chapter { grid-template-columns: 1fr; }
+    .chapter-visual { min-height: 55vw; }
+    .chapter-content { padding: 56px 32px; }
+
+    .footer-inner { grid-template-columns: 1fr 1fr; gap: 40px; }
+    footer { padding: 60px 32px; }
+    .footer-bottom { flex-direction: column; gap: 20px; text-align: center; }
+
+    #product { padding: 80px 32px; }
+    #specs { padding: 80px 32px; }
+    .specs-grid { grid-template-columns: 1fr 1fr; }
+  }
+</style>
+</head>
+<body>
+
+<div class="grain"></div>
+<div id="cursor-ring"></div>
+
+<!-- NAV -->
+<nav id="navbar">
+  <a href="#" class="nav-logo">Aevum</a>
+  <ul class="nav-links">
+    <li><a href="#chapters">Craft</a></li>
+    <li><a href="#product">Collection</a></li>
+    <li><a href="#specs">Maison</a></li>
+    <li><a href="#video-section">Atelier</a></li>
+  </ul>
+  <a href="#product" class="nav-cta">Discover</a>
+</nav>
+
+<!-- HERO -->
+<section id="hero">
+  <div class="hero-bg"></div>
+  <div class="hero-watch-wrap" id="heroWatchWrap">
+    <svg class="hero-watch-svg" id="heroWatchSvg" viewBox="0 0 400 500" xmlns="http://www.w3.org/2000/svg">
+      <!-- Watch strap top -->
+      <rect x="162" y="10" width="76" height="110" rx="12" fill="#111" stroke="#2a2a2a" stroke-width="1"/>
+      <rect x="169" y="18" width="62" height="94" rx="8" fill="#0d0d0d"/>
+      <!-- Strap buckle holes -->
+      <rect x="185" y="32" width="30" height="2" rx="1" fill="#1e1e1e"/>
+      <rect x="185" y="40" width="30" height="2" rx="1" fill="#1e1e1e"/>
+      <rect x="185" y="48" width="30" height="2" rx="1" fill="#1e1e1e"/>
+      <rect x="185" y="56" width="30" height="2" rx="1" fill="#1e1e1e"/>
+      
+      <!-- Watch case outer -->
+      <circle cx="200" cy="245" r="115" fill="none" stroke="#1e1e1e" stroke-width="3"/>
+      <circle cx="200" cy="245" r="113" fill="url(#caseGrad)"/>
+      
+      <!-- Bezel -->
+      <circle cx="200" cy="245" r="108" fill="none" stroke="url(#bezelGrad)" stroke-width="8"/>
+      
+      <!-- Face -->
+      <circle cx="200" cy="245" r="96" fill="url(#faceGrad)"/>
+      
+      <!-- Dial texture -->
+      <circle cx="200" cy="245" r="96" fill="url(#dialPattern)" opacity="0.3"/>
+      
+      <!-- Hour markers -->
+      <g stroke="url(#markerGrad)" stroke-width="1.5" stroke-linecap="round">
+        <line x1="200" y1="158" x2="200" y2="172"/>
+        <line x1="247.5" y1="162.5" x2="241.5" y2="172.9" transform="rotate(30, 200, 245)"/>
+        <line x1="247.5" y1="162.5" x2="241.5" y2="172.9" transform="rotate(60, 200, 245)"/>
+        <line x1="296" y1="245" x2="282" y2="245"/>
+        <line x1="247.5" y1="162.5" x2="241.5" y2="172.9" transform="rotate(120, 200, 245)"/>
+        <line x1="247.5" y1="162.5" x2="241.5" y2="172.9" transform="rotate(150, 200, 245)"/>
+        <line x1="200" y1="332" x2="200" y2="318"/>
+        <line x1="247.5" y1="162.5" x2="241.5" y2="172.9" transform="rotate(210, 200, 245)"/>
+        <line x1="247.5" y1="162.5" x2="241.5" y2="172.9" transform="rotate(240, 200, 245)"/>
+        <line x1="104" y1="245" x2="118" y2="245"/>
+        <line x1="247.5" y1="162.5" x2="241.5" y2="172.9" transform="rotate(300, 200, 245)"/>
+        <line x1="247.5" y1="162.5" x2="241.5" y2="172.9" transform="rotate(330, 200, 245)"/>
+      </g>
+
+      <!-- Center logo text -->
+      <text x="200" y="210" text-anchor="middle" font-family="Georgia, serif" font-size="11" font-weight="300" letter-spacing="4" fill="rgba(200,200,190,0.7)">AEVUM</text>
+      <text x="200" y="227" text-anchor="middle" font-family="Georgia, serif" font-size="7" letter-spacing="2" fill="rgba(200,200,190,0.35)">MANUFACTURE</text>
+      
+      <!-- Sub-dial -->
+      <circle cx="200" cy="278" r="16" fill="none" stroke="#222" stroke-width="1"/>
+      <circle cx="200" cy="278" r="14" fill="rgba(10,10,10,0.8)"/>
+      <text x="200" y="281" text-anchor="middle" font-family="Georgia, serif" font-size="6" letter-spacing="1" fill="rgba(200,200,190,0.3)">60</text>
+      
+      <!-- Hour hand -->
+      <g transform="rotate(318, 200, 245)">
+        <rect x="197" y="188" width="6" height="57" rx="3" fill="url(#handGrad)"/>
+      </g>
+      
+      <!-- Minute hand -->
+      <g transform="rotate(72, 200, 245)">
+        <rect x="198.5" y="163" width="3" height="82" rx="1.5" fill="url(#handGrad)"/>
+      </g>
+      
+      <!-- Second hand -->
+      <g transform="rotate(144, 200, 245)">
+        <rect x="199.5" y="152" width="1" height="93" rx="0.5" fill="#c0a870"/>
+        <rect x="199" y="245" width="2" height="22" rx="1" fill="#c0a870"/>
+      </g>
+      
+      <!-- Center cap -->
+      <circle cx="200" cy="245" r="4" fill="#c0a870"/>
+      <circle cx="200" cy="245" r="2" fill="#e8d8b0"/>
+      
+      <!-- Crown -->
+      <rect x="313" y="238" width="18" height="14" rx="4" fill="#222" stroke="#333" stroke-width="0.5"/>
+      <rect x="316" y="241" width="12" height="2" rx="1" fill="#444"/>
+      <rect x="316" y="245" width="12" height="2" rx="1" fill="#444"/>
+      
+      <!-- Watch strap bottom -->
+      <rect x="162" y="370" width="76" height="120" rx="12" fill="#111" stroke="#2a2a2a" stroke-width="1"/>
+      <rect x="169" y="378" width="62" height="104" rx="8" fill="#0d0d0d"/>
+      <rect x="185" y="395" width="30" height="2" rx="1" fill="#1e1e1e"/>
+      <rect x="185" y="403" width="30" height="2" rx="1" fill="#1e1e1e"/>
+      <rect x="185" y="411" width="30" height="2" rx="1" fill="#1e1e1e"/>
+      <rect x="185" y="419" width="30" height="2" rx="1" fill="#1e1e1e"/>
+      <!-- Buckle -->
+      <rect x="178" y="450" width="44" height="20" rx="4" fill="#1a1a1a" stroke="#2a2a2a" stroke-width="0.5"/>
+      <circle cx="200" cy="460" r="5" fill="none" stroke="#333" stroke-width="1"/>
+      
+      <defs>
+        <linearGradient id="caseGrad" x1="0" y1="0" x2="1" y2="1">
+          <stop offset="0%" stop-color="#2a2a2a"/>
+          <stop offset="40%" stop-color="#1a1a1a"/>
+          <stop offset="100%" stop-color="#0a0a0a"/>
+        </linearGradient>
+        <linearGradient id="bezelGrad" x1="0" y1="0" x2="1" y2="1">
+          <stop offset="0%" stop-color="#555"/>
+          <stop offset="25%" stop-color="#ccc"/>
+          <stop offset="50%" stop-color="#555"/>
+          <stop offset="75%" stop-color="#888"/>
+          <stop offset="100%" stop-color="#444"/>
+        </linearGradient>
+        <radialGradient id="faceGrad" cx="40%" cy="35%">
+          <stop offset="0%" stop-color="#111"/>
+          <stop offset="100%" stop-color="#050505"/>
+        </radialGradient>
+        <linearGradient id="markerGrad" x1="0" y1="0" x2="1" y2="0">
+          <stop offset="0%" stop-color="#b8a882"/>
+          <stop offset="100%" stop-color="#d4c4a0"/>
+        </linearGradient>
+        <linearGradient id="handGrad" x1="0" y1="0" x2="1" y2="0">
+          <stop offset="0%" stop-color="#888"/>
+          <stop offset="50%" stop-color="#fff"/>
+          <stop offset="100%" stop-color="#666"/>
+        </linearGradient>
+        <pattern id="dialPattern" x="0" y="0" width="4" height="4" patternUnits="userSpaceOnUse">
+          <line x1="0" y1="0" x2="4" y2="4" stroke="#ffffff" stroke-width="0.3"/>
+        </pattern>
+      </defs>
+    </svg>
+  </div>
+  <div class="hero-vignette"></div>
+  <div class="hero-content" id="heroContent">
+    <div class="hero-eyebrow">Maison Aevum · Est. 1921</div>
+    <h1 class="hero-title">
+      The<br>Icon
+      <em>Collection Perpétuelle</em>
+    </h1>
+    <p class="hero-subtitle">Where time becomes eternal</p>
+    <div class="hero-line"></div>
+  </div>
+  <div class="scroll-indicator">
+    <span>Explore</span>
+    <div class="scroll-line"></div>
+  </div>
+</section>
+
+<!-- MARQUEE -->
+<div class="marquee-strip">
+  <div class="marquee-inner">
+    <span class="marquee-item">Swiss Manufacture <span class="marquee-dot">◆</span></span>
+    <span class="marquee-item">Haute Horlogerie <span class="marquee-dot">◆</span></span>
+    <span class="marquee-item">Collection Perpétuelle <span class="marquee-dot">◆</span></span>
+    <span class="marquee-item">100m Water Resistant <span class="marquee-dot">◆</span></span>
+    <span class="marquee-item">Ceramic & Steel <span class="marquee-dot">◆</span></span>
+    <span class="marquee-item">Calibre AV-7 <span class="marquee-dot">◆</span></span>
+    <span class="marquee-item">Swiss Manufacture <span class="marquee-dot">◆</span></span>
+    <span class="marquee-item">Haute Horlogerie <span class="marquee-dot">◆</span></span>
+    <span class="marquee-item">Collection Perpétuelle <span class="marquee-dot">◆</span></span>
+    <span class="marquee-item">100m Water Resistant <span class="marquee-dot">◆</span></span>
+    <span class="marquee-item">Ceramic & Steel <span class="marquee-dot">◆</span></span>
+    <span class="marquee-item">Calibre AV-7 <span class="marquee-dot">◆</span></span>
+  </div>
+</div>
+
+<!-- CHAPTERS -->
+<div id="chapters">
+
+  <!-- Chapter 1: Design -->
+  <div class="chapter" data-chapter="1">
+    <div class="chapter-visual">
+      <svg class="chapter-img" viewBox="0 0 800 900" xmlns="http://www.w3.org/2000/svg" preserveAspectRatio="xMidYMid slice" style="background:#0a0a0a; position:absolute; inset:0; width:100%; height:100%;">
+        <defs>
+          <radialGradient id="ch1bg" cx="60%" cy="40%">
+            <stop offset="0%" stop-color="#1a1507"/>
+            <stop offset="100%" stop-color="#050505"/>
+          </radialGradient>
+        </defs>
+        <rect width="800" height="900" fill="url(#ch1bg)"/>
+        <circle cx="400" cy="420" r="280" fill="none" stroke="rgba(184,168,130,0.06)" stroke-width="1"/>
+        <circle cx="400" cy="420" r="220" fill="none" stroke="rgba(184,168,130,0.08)" stroke-width="0.5"/>
+        <circle cx="400" cy="420" r="160" fill="none" stroke="rgba(184,168,130,0.12)" stroke-width="0.5"/>
+        <circle cx="400" cy="420" r="140" fill="url(#ch1face)"/>
+        <circle cx="400" cy="420" r="135" fill="none" stroke="url(#ch1ring)" stroke-width="6"/>
+        <line x1="100" y1="420" x2="260" y2="420" stroke="rgba(184,168,130,0.15)" stroke-width="0.5"/>
+        <line x1="540" y1="420" x2="700" y2="420" stroke="rgba(184,168,130,0.15)" stroke-width="0.5"/>
+        <line x1="400" y1="120" x2="400" y2="280" stroke="rgba(184,168,130,0.15)" stroke-width="0.5"/>
+        <line x1="400" y1="560" x2="400" y2="720" stroke="rgba(184,168,130,0.15)" stroke-width="0.5"/>
+        <g stroke="#b8a882" stroke-width="1.5" opacity="0.7">
+          <line x1="400" y1="288" x2="400" y2="305"/>
+          <line x1="400" y1="535" x2="400" y2="552"/>
+          <line x1="260" y1="420" x2="277" y2="420"/>
+          <line x1="523" y1="420" x2="540" y2="420"/>
+        </g>
+        <g transform="rotate(320, 400, 420)">
+          <rect x="397.5" y="330" width="5" height="90" rx="2.5" fill="#d4d4cc"/>
+        </g>
+        <g transform="rotate(70, 400, 420)">
+          <rect x="399" y="305" width="2" height="115" rx="1" fill="#d4d4cc"/>
+        </g>
+        <circle cx="400" cy="420" r="5" fill="#c0a870"/>
+        <ellipse cx="380" cy="370" rx="40" ry="20" fill="rgba(255,255,255,0.03)" transform="rotate(-30, 380, 370)"/>
+        <defs>
+          <radialGradient id="ch1face" cx="40%" cy="35%">
+            <stop offset="0%" stop-color="#0e0e0e"/>
+            <stop offset="100%" stop-color="#050505"/>
+          </radialGradient>
+          <linearGradient id="ch1ring" x1="0" y1="0" x2="1" y2="1">
+            <stop offset="0%" stop-color="#777"/>
+            <stop offset="30%" stop-color="#ddd"/>
+            <stop offset="70%" stop-color="#666"/>
+            <stop offset="100%" stop-color="#999"/>
+          </linearGradient>
+        </defs>
+      </svg>
+      <div class="chapter-overlay"></div>
+      <div class="chapter-chapter-label">01</div>
+    </div>
+    <div class="chapter-content">
+      <div class="chapter-num">Chapter One</div>
+      <h2 class="chapter-title">The Art<br>of <em>Silence</em></h2>
+      <div class="chapter-divider"></div>
+      <p class="chapter-text">Every line drawn with intention. Every curve the result of decades of refinement. The Perpétuelle case is a study in restraint — where less becomes an ethos, and silence becomes the loudest statement a timepiece can make.</p>
+      <div class="chapter-tag">Design Philosophy</div>
+    </div>
+  </div>
+
+  <!-- Chapter 2: Craftsmanship (reverse) -->
+  <div class="chapter reverse" data-chapter="2">
+    <div class="chapter-visual">
+      <svg class="chapter-img" viewBox="0 0 800 900" xmlns="http://www.w3.org/2000/svg" preserveAspectRatio="xMidYMid slice" style="background:#060608; position:absolute; inset:0; width:100%; height:100%;">
+        <defs>
+          <radialGradient id="ch2bg" cx="40%" cy="60%">
+            <stop offset="0%" stop-color="#07070f"/>
+            <stop offset="100%" stop-color="#030303"/>
+          </radialGradient>
+        </defs>
+        <rect width="800" height="900" fill="url(#ch2bg)"/>
+        <g transform="translate(400, 430)">
+          <circle r="180" fill="none" stroke="rgba(184,168,130,0.06)" stroke-width="1"/>
+          <circle r="160" fill="none" stroke="rgba(184,168,130,0.05)" stroke-width="20"/>
+          <g opacity="0.15">
+            <circle r="162" fill="none" stroke="#b8a882" stroke-width="1" stroke-dasharray="8 6"/>
+          </g>
+          <circle r="100" fill="none" stroke="rgba(184,168,130,0.08)" stroke-width="0.5"/>
+          <circle r="70" fill="none" stroke="rgba(184,168,130,0.1)" stroke-width="0.5"/>
+          <circle r="40" fill="rgba(184,168,130,0.04)" stroke="rgba(184,168,130,0.12)" stroke-width="1"/>
+          <g stroke="rgba(184,168,130,0.3)" stroke-width="1" fill="none">
+            <line x1="-100" y1="0" x2="-40" y2="0"/>
+            <line x1="100" y1="0" x2="40" y2="0"/>
+            <line x1="0" y1="-100" x2="0" y2="-40"/>
+            <line x1="0" y1="100" x2="0" y2="40"/>
+            <line x1="-70" y1="-70" x2="-30" y2="-30"/>
+            <line x1="70" y1="-70" x2="30" y2="-30"/>
+            <line x1="-70" y1="70" x2="-30" y2="30"/>
+            <line x1="70" y1="70" x2="30" y2="30"/>
+          </g>
+          <circle cx="120" cy="0" r="18" fill="none" stroke="rgba(184,168,130,0.2)" stroke-width="0.5"/>
+          <circle cx="-120" cy="0" r="18" fill="none" stroke="rgba(184,168,130,0.2)" stroke-width="0.5"/>
+          <circle cx="0" cy="120" r="14" fill="none" stroke="rgba(184,168,130,0.2)" stroke-width="0.5"/>
+          <circle cx="0" cy="-120" r="14" fill="none" stroke="rgba(184,168,130,0.2)" stroke-width="0.5"/>
+          <circle r="6" fill="#b8a882" opacity="0.4"/>
+        </g>
+      </svg>
+      <div class="chapter-overlay"></div>
+      <div class="chapter-chapter-label">02</div>
+    </div>
+    <div class="chapter-content">
+      <div class="chapter-num">Chapter Two</div>
+      <h2 class="chapter-title">Infinite<br><em>Precision</em></h2>
+      <div class="chapter-divider"></div>
+      <p class="chapter-text">Within the Calibre AV-7 beats 312 meticulously finished components. Each gear, spring, and jewel is assembled by hand — a ritual performed by the same maîtres horlogers who have dedicated their lives to the pursuit of mechanical perfection.</p>
+      <div class="chapter-tag">Swiss Craftsmanship</div>
+    </div>
+  </div>
+
+  <!-- Chapter 3: Material -->
+  <div class="chapter" data-chapter="3">
+    <div class="chapter-visual">
+      <svg class="chapter-img" viewBox="0 0 800 900" xmlns="http://www.w3.org/2000/svg" preserveAspectRatio="xMidYMid slice" style="background:#080808; position:absolute; inset:0; width:100%; height:100%;">
+        <defs>
+          <radialGradient id="ch3glow" cx="50%" cy="50%">
+            <stop offset="0%" stop-color="#1a1a1a"/>
+            <stop offset="100%" stop-color="#050505"/>
+          </radialGradient>
+          <linearGradient id="ceramicGrad" x1="0" y1="0" x2="1" y2="1">
+            <stop offset="0%" stop-color="#222"/>
+            <stop offset="40%" stop-color="#111"/>
+            <stop offset="100%" stop-color="#050505"/>
+          </linearGradient>
+        </defs>
+        <rect width="800" height="900" fill="url(#ch3glow)"/>
+        <g transform="translate(400, 430)">
+          <circle r="200" fill="url(#ceramicGrad)" stroke="#333" stroke-width="0.5"/>
+          <circle r="195" fill="none" stroke="rgba(255,255,255,0.03)" stroke-width="1"/>
+          <circle r="145" fill="#060606"/>
+          <circle r="140" fill="none" stroke="rgba(184,168,130,0.1)" stroke-width="0.5"/>
+          <g stroke="rgba(255,255,255,0.02)" stroke-width="0.5">
+            <line x1="-200" y1="-60" x2="200" y2="-40"/>
+            <line x1="-200" y1="-30" x2="200" y2="-10"/>
+            <line x1="-200" y1="0" x2="200" y2="20"/>
+            <line x1="-200" y1="30" x2="200" y2="50"/>
+            <line x1="-200" y1="60" x2="200" y2="80"/>
+          </g>
+          <path d="M -140 -120 A 180 180 0 0 1 140 -120" fill="none" stroke="rgba(255,255,255,0.05)" stroke-width="15" stroke-linecap="round"/>
+          <rect x="140" y="-8" width="55" height="16" rx="8" fill="#111" stroke="#222" stroke-width="0.5"/>
+          <g fill="rgba(184,168,130,0.6)">
+            <circle cx="0" cy="-190" r="2"/>
+            <circle cx="95" cy="-165" r="1.5"/>
+            <circle cx="165" cy="-95" r="1.5"/>
+            <circle cx="190" cy="0" r="2"/>
+            <circle cx="165" cy="95" r="1.5"/>
+            <circle cx="95" cy="165" r="1.5"/>
+            <circle cx="0" cy="190" r="2"/>
+            <circle cx="-95" cy="165" r="1.5"/>
+            <circle cx="-165" cy="95" r="1.5"/>
+            <circle cx="-190" cy="0" r="2"/>
+            <circle cx="-165" cy="-95" r="1.5"/>
+            <circle cx="-95" cy="-165" r="1.5"/>
+          </g>
+        </g>
+        <ellipse cx="620" cy="160" rx="120" ry="80" fill="rgba(255,255,255,0.015)" transform="rotate(-20, 620, 160)"/>
+      </svg>
+      <div class="chapter-overlay"></div>
+      <div class="chapter-chapter-label">03</div>
+    </div>
+    <div class="chapter-content">
+      <div class="chapter-num">Chapter Three</div>
+      <h2 class="chapter-title">Born<br>from <em>Fire</em></h2>
+      <div class="chapter-divider"></div>
+      <p class="chapter-text">Forged at 1,400 degrees Celsius, our proprietary black ceramic achieves a hardness that defies time itself. It does not tarnish, does not scratch, does not yield. This is material as philosophy — permanence elevated to art.</p>
+      <div class="chapter-tag">Ceramic Mastery</div>
+    </div>
+  </div>
+
+  <!-- Chapter 4: Innovation (reverse) -->
+  <div class="chapter reverse" data-chapter="4">
+    <div class="chapter-visual">
+      <svg class="chapter-img" viewBox="0 0 800 900" xmlns="http://www.w3.org/2000/svg" preserveAspectRatio="xMidYMid slice" style="background:#050508; position:absolute; inset:0; width:100%; height:100%;">
+        <rect width="800" height="900" fill="#050508"/>
+        <g stroke="rgba(184,168,130,0.04)" stroke-width="0.5">
+          <line x1="0" y1="150" x2="800" y2="150"/>
+          <line x1="0" y1="300" x2="800" y2="300"/>
+          <line x1="0" y1="450" x2="800" y2="450"/>
+          <line x1="0" y1="600" x2="800" y2="600"/>
+          <line x1="0" y1="750" x2="800" y2="750"/>
+          <line x1="133" y1="0" x2="133" y2="900"/>
+          <line x1="266" y1="0" x2="266" y2="900"/>
+          <line x1="400" y1="0" x2="400" y2="900"/>
+          <line x1="533" y1="0" x2="533" y2="900"/>
+          <line x1="666" y1="0" x2="666" y2="900"/>
+        </g>
+        <g transform="translate(400, 430)">
+          <path d="M -160 -80 A 180 180 0 0 1 160 -80" fill="none" stroke="rgba(184,168,130,0.08)" stroke-width="20"/>
+          <path d="M -160 -80 A 180 180 0 0 1 80 -145" fill="none" stroke="rgba(184,168,130,0.5)" stroke-width="4" stroke-linecap="round"/>
+          <circle cx="80" cy="-145" r="6" fill="#b8a882"/>
+          <text x="-170" y="-55" font-family="Georgia,serif" font-size="9" fill="rgba(184,168,130,0.4)" letter-spacing="2">0</text>
+          <text x="155" y="-55" font-family="Georgia,serif" font-size="9" fill="rgba(184,168,130,0.4)" letter-spacing="2">72H</text>
+          <circle r="120" fill="#060606" stroke="rgba(184,168,130,0.08)" stroke-width="0.5"/>
+          <circle r="100" fill="none" stroke="rgba(184,168,130,0.05)" stroke-width="0.5"/>
+          <rect x="-18" y="25" width="36" height="22" fill="#0a0a0a" stroke="rgba(184,168,130,0.2)" stroke-width="0.5"/>
+          <text x="0" y="41" text-anchor="middle" font-family="Georgia,serif" font-size="12" fill="rgba(184,168,130,0.7)">14</text>
+          <g transform="rotate(200)">
+            <rect x="-2" y="-95" width="4" height="70" rx="2" fill="#ccc"/>
+          </g>
+          <g transform="rotate(290)">
+            <rect x="-1.5" y="-110" width="3" height="85" rx="1.5" fill="#ccc"/>
+          </g>
+          <circle r="4" fill="#b8a882"/>
+        </g>
+      </svg>
+      <div class="chapter-overlay"></div>
+      <div class="chapter-chapter-label">04</div>
+    </div>
+    <div class="chapter-content">
+      <div class="chapter-num">Chapter Four</div>
+      <h2 class="chapter-title">72 Hours<br><em>of Power</em></h2>
+      <div class="chapter-divider"></div>
+      <p class="chapter-text">The AV-7 movement's twin barrels deliver an unprecedented 72-hour power reserve. A feat of micro-engineering that ensures the Perpétuelle continues its eternal rhythm for three full days without attention — because true luxury does not demand maintenance.</p>
+      <div class="chapter-tag">Movement Innovation</div>
+    </div>
+  </div>
+
+</div>
+
+<!-- PRODUCT HIGHLIGHT -->
+<section id="product">
+  <div class="product-eyebrow reveal">La Perpétuelle Noire</div>
+  <div class="product-watch-container">
+    <div class="product-watch-ring"></div>
+    <svg class="product-watch-svg" viewBox="0 0 360 460" xmlns="http://www.w3.org/2000/svg">
+      <defs>
+        <radialGradient id="pFace" cx="38%" cy="32%">
+          <stop offset="0%" stop-color="#111"/>
+          <stop offset="100%" stop-color="#030303"/>
+        </radialGradient>
+        <linearGradient id="pBezel" x1="0" y1="0" x2="1" y2="1">
+          <stop offset="0%" stop-color="#666"/>
+          <stop offset="25%" stop-color="#ddd"/>
+          <stop offset="50%" stop-color="#555"/>
+          <stop offset="75%" stop-color="#999"/>
+          <stop offset="100%" stop-color="#444"/>
+        </linearGradient>
+        <linearGradient id="pCase" x1="0" y1="0" x2="1" y2="1">
+          <stop offset="0%" stop-color="#252525"/>
+          <stop offset="50%" stop-color="#111"/>
+          <stop offset="100%" stop-color="#070707"/>
+        </linearGradient>
+        <linearGradient id="pHand" x1="0" y1="0" x2="1" y2="0">
+          <stop offset="0%" stop-color="#666"/>
+          <stop offset="50%" stop-color="#fff"/>
+          <stop offset="100%" stop-color="#555"/>
+        </linearGradient>
+        <filter id="glow">
+          <feGaussianBlur stdDeviation="3" result="blur"/>
+          <feMerge><feMergeNode in="blur"/><feMergeNode in="SourceGraphic"/></feMerge>
+        </filter>
+      </defs>
+      <rect x="142" y="8" width="76" height="110" rx="12" fill="#111" stroke="#1e1e1e" stroke-width="0.5"/>
+      <rect x="150" y="16" width="60" height="94" rx="7" fill="#0a0a0a"/>
+      <rect x="165" y="30" width="30" height="2" rx="1" fill="#1a1a1a"/>
+      <rect x="165" y="38" width="30" height="2" rx="1" fill="#1a1a1a"/>
+      <rect x="165" y="46" width="30" height="2" rx="1" fill="#1a1a1a"/>
+      <circle cx="180" cy="235" r="107" fill="url(#pCase)"/>
+      <circle cx="180" cy="235" r="102" fill="none" stroke="url(#pBezel)" stroke-width="7"/>
+      <circle cx="180" cy="235" r="92" fill="url(#pFace)"/>
+      <circle cx="180" cy="235" r="92" fill="none" stroke="rgba(255,255,255,0.015)" stroke-width="30"/>
+      <g stroke="#b8a882" stroke-width="1.2" stroke-linecap="round" opacity="0.8">
+        <line x1="180" y1="148" x2="180" y2="162"/>
+        <line x1="267" y1="235" x2="253" y2="235"/>
+        <line x1="180" y1="322" x2="180" y2="308"/>
+        <line x1="93" y1="235" x2="107" y2="235"/>
+      </g>
+      <g stroke="#b8a882" stroke-width="0.8" stroke-linecap="round" opacity="0.35">
+        <line x1="180" y1="148" x2="180" y2="155" transform="rotate(30, 180, 235)"/>
+        <line x1="180" y1="148" x2="180" y2="155" transform="rotate(60, 180, 235)"/>
+        <line x1="180" y1="148" x2="180" y2="155" transform="rotate(120, 180, 235)"/>
+        <line x1="180" y1="148" x2="180" y2="155" transform="rotate(150, 180, 235)"/>
+        <line x1="180" y1="148" x2="180" y2="155" transform="rotate(210, 180, 235)"/>
+        <line x1="180" y1="148" x2="180" y2="155" transform="rotate(240, 180, 235)"/>
+        <line x1="180" y1="148" x2="180" y2="155" transform="rotate(300, 180, 235)"/>
+        <line x1="180" y1="148" x2="180" y2="155" transform="rotate(330, 180, 235)"/>
+      </g>
+      <text x="180" y="202" text-anchor="middle" font-family="Georgia,serif" font-size="10" letter-spacing="4" fill="rgba(200,200,190,0.65)">AEVUM</text>
+      <text x="180" y="217" text-anchor="middle" font-family="Georgia,serif" font-size="6" letter-spacing="2.5" fill="rgba(200,200,190,0.3)">GENÈVE</text>
+      <g transform="rotate(225, 180, 235)">
+        <rect x="178" y="175" width="4" height="60" rx="2" fill="url(#pHand)"/>
+      </g>
+      <g transform="rotate(120, 180, 235)">
+        <rect x="179.5" y="152" width="1.5" height="83" rx="0.75" fill="#ddd"/>
+        <rect x="179.5" y="235" width="1.5" height="20" rx="0.75" fill="#ddd"/>
+      </g>
+      <g transform="rotate(300, 180, 235)" filter="url(#glow)">
+        <rect x="180" y="142" width="0.8" height="93" rx="0.4" fill="#c0a870"/>
+        <rect x="179.8" y="235" width="1.2" height="22" rx="0.6" fill="#c0a870"/>
+      </g>
+      <circle cx="180" cy="235" r="4" fill="#c0a870"/>
+      <circle cx="180" cy="235" r="1.8" fill="#e8d8b0"/>
+      <rect x="287" y="229" width="16" height="12" rx="4" fill="#1a1a1a" stroke="#2a2a2a" stroke-width="0.5"/>
+      <rect x="142" y="348" width="76" height="104" rx="12" fill="#111" stroke="#1e1e1e" stroke-width="0.5"/>
+      <rect x="150" y="356" width="60" height="88" rx="7" fill="#0a0a0a"/>
+      <rect x="165" y="370" width="30" height="2" rx="1" fill="#1a1a1a"/>
+      <rect x="165" y="378" width="30" height="2" rx="1" fill="#1a1a1a"/>
+      <rect x="165" y="386" width="30" height="2" rx="1" fill="#1a1a1a"/>
+      <rect x="165" y="394" width="30" height="2" rx="1" fill="#1a1a1a"/>
+      <rect x="155" y="412" width="50" height="18" rx="4" fill="#181818" stroke="#222" stroke-width="0.5"/>
+      <circle cx="180" cy="421" r="5" fill="none" stroke="#2a2a2a" stroke-width="0.8"/>
+    </svg>
+  </div>
+  <h2 class="product-title reveal">Perpétuelle</h2>
+  <p class="product-subtitle reveal reveal-delay-1">Calibre AV-7 · 40mm · Black Ceramic</p>
+  <a href="#" class="product-cta reveal reveal-delay-2">Discover the Collection</a>
+</section>
+
+<!-- SPECS -->
+<section id="specs">
+  <div class="specs-header">
+    <p class="specs-eyebrow reveal">Technical Excellence</p>
+    <h2 class="specs-title reveal reveal-delay-1">The Anatomy<br><em style="font-style:italic; color:rgba(245,245,240,0.4)">of Eternity</em></h2>
+  </div>
+  <div class="specs-grid">
+    <div class="spec-item">
+      <svg class="spec-icon" viewBox="0 0 32 32" fill="none" stroke="#b8a882" stroke-width="1" xmlns="http://www.w3.org/2000/svg">
+        <circle cx="16" cy="16" r="13"/>
+        <line x1="16" y1="4" x2="16" y2="8"/>
+        <line x1="28" y1="16" x2="24" y2="16"/>
+        <line x1="16" y1="28" x2="16" y2="24"/>
+        <line x1="4" y1="16" x2="8" y2="16"/>
+        <circle cx="16" cy="16" r="2" fill="#b8a882"/>
+        <line x1="16" y1="14" x2="16" y2="9" stroke-width="1.5"/>
+        <line x1="18" y1="16" x2="22" y2="16" stroke-width="1.5"/>
+      </svg>
+      <div class="spec-label">Movement</div>
+      <div class="spec-value">Calibre AV-7</div>
+      <div class="spec-detail">Manufacture movement · 28,800 vph · 41 jewels</div>
+    </div>
+    <div class="spec-item">
+      <svg class="spec-icon" viewBox="0 0 32 32" fill="none" stroke="#b8a882" stroke-width="1" xmlns="http://www.w3.org/2000/svg">
+        <rect x="4" y="8" width="24" height="16" rx="3"/>
+        <line x1="10" y1="8" x2="10" y2="24"/>
+        <line x1="16" y1="8" x2="16" y2="24"/>
+        <line x1="22" y1="8" x2="22" y2="24"/>
+        <line x1="4" y1="16" x2="28" y2="16"/>
+      </svg>
+      <div class="spec-label">Power Reserve</div>
+      <div class="spec-value">72 Hours</div>
+      <div class="spec-detail">Twin mainspring barrels · Power reserve indicator at 12 o'clock</div>
+    </div>
+    <div class="spec-item">
+      <svg class="spec-icon" viewBox="0 0 32 32" fill="none" stroke="#b8a882" stroke-width="1" xmlns="http://www.w3.org/2000/svg">
+        <circle cx="16" cy="16" r="12"/>
+        <path d="M 16 8 L 16 4"/><path d="M 16 28 L 16 24"/>
+        <path d="M 8 16 L 4 16"/><path d="M 28 16 L 24 16"/>
+        <path d="M 10 10 L 7 7"/><path d="M 22 22 L 25 25"/>
+        <circle cx="16" cy="16" r="6" stroke-dasharray="2 2"/>
+      </svg>
+      <div class="spec-label">Case Diameter</div>
+      <div class="spec-value">40mm</div>
+      <div class="spec-detail">High-tech black ceramic · 10mm thickness · Anti-reflective sapphire crystal</div>
+    </div>
+    <div class="spec-item">
+      <svg class="spec-icon" viewBox="0 0 32 32" fill="none" stroke="#b8a882" stroke-width="1" xmlns="http://www.w3.org/2000/svg">
+        <path d="M 16 4 L 28 10 L 28 22 L 16 28 L 4 22 L 4 10 Z"/>
+        <path d="M 16 4 L 16 28"/>
+        <path d="M 4 10 L 28 22"/>
+        <path d="M 28 10 L 4 22"/>
+      </svg>
+      <div class="spec-label">Material</div>
+      <div class="spec-value">Black Ceramic</div>
+      <div class="spec-detail">Grade 5 titanium crown · Scratch-resistant · Hypoallergenic</div>
+    </div>
+    <div class="spec-item">
+      <svg class="spec-icon" viewBox="0 0 32 32" fill="none" stroke="#b8a882" stroke-width="1" xmlns="http://www.w3.org/2000/svg">
+        <path d="M 16 4 C 8 4 4 10 4 16 C 4 22 8 28 16 28 C 24 28 28 22 28 16 C 28 10 24 4 16 4"/>
+        <path d="M 4 16 L 12 20 L 16 12 L 20 24 L 24 16 L 28 16"/>
+      </svg>
+      <div class="spec-label">Water Resistance</div>
+      <div class="spec-value">100 metres</div>
+      <div class="spec-detail">Screw-locked crown · Tested at 120m · Pool & shower safe</div>
+    </div>
+    <div class="spec-item">
+      <svg class="spec-icon" viewBox="0 0 32 32" fill="none" stroke="#b8a882" stroke-width="1" xmlns="http://www.w3.org/2000/svg">
+        <rect x="6" y="10" width="20" height="14" rx="2"/>
+        <path d="M 6 16 L 26 16"/>
+        <circle cx="11" cy="13" r="1.5" fill="#b8a882"/>
+        <circle cx="21" cy="19" r="1.5" fill="#b8a882"/>
+        <path d="M 10 8 L 10 6"/><path d="M 22 8 L 22 6"/>
+      </svg>
+      <div class="spec-label">Strap</div>
+      <div class="spec-value">Rubber & Leather</div>
+      <div class="spec-detail">Black vulcanized rubber · White stitching · Ceramic deployment clasp</div>
+    </div>
+    <div class="spec-item">
+      <svg class="spec-icon" viewBox="0 0 32 32" fill="none" stroke="#b8a882" stroke-width="1" xmlns="http://www.w3.org/2000/svg">
+        <path d="M 3 16 Q 6 6 9 16 Q 12 26 15 16 Q 18 6 21 16 Q 24 26 27 16 L 29 16" stroke-linecap="round" stroke-linejoin="round"/>
+      </svg>
+      <div class="spec-label">Frequency</div>
+      <div class="spec-value">4 Hz · 28,800 vph</div>
+      <div class="spec-detail">Silicon escapement · Anti-magnetic to 1,500 gauss · COSC-certified precision</div>
+    </div>
+    <div class="spec-item">
+      <svg class="spec-icon" viewBox="0 0 32 32" fill="none" stroke="#b8a882" stroke-width="1" xmlns="http://www.w3.org/2000/svg">
+        <polygon points="16,3 27,9 27,23 16,29 5,23 5,9"/>
+        <polygon points="16,8 23,12 23,20 16,24 9,20 9,12" stroke-opacity="0.4"/>
+        <line x1="16" y1="3" x2="16" y2="8"/><line x1="27" y1="9" x2="23" y2="12"/>
+        <line x1="27" y1="23" x2="23" y2="20"/><line x1="16" y1="29" x2="16" y2="24"/>
+        <line x1="5" y1="23" x2="9" y2="20"/><line x1="5" y1="9" x2="9" y2="12"/>
+      </svg>
+      <div class="spec-label">Crystal</div>
+      <div class="spec-value">Sapphire</div>
+      <div class="spec-detail">Domed sapphire · Double anti-reflective coating · 9 Mohs hardness</div>
+    </div>
+  </div>
+</section>
+
+<!-- VIDEO / CINEMATIC -->
+<section id="video-section">
+  <div class="video-bg"></div>
+  <div class="video-cinematic">
+    <svg class="video-watch-anim" viewBox="0 0 300 380" xmlns="http://www.w3.org/2000/svg">
+      <defs>
+        <radialGradient id="vFace" cx="40%" cy="35%">
+          <stop offset="0%" stop-color="#111"/>
+          <stop offset="100%" stop-color="#030303"/>
+        </radialGradient>
+        <linearGradient id="vBezel" x1="0" y1="0" x2="1" y2="1">
+          <stop offset="0%" stop-color="#555"/>
+          <stop offset="25%" stop-color="#ccc"/>
+          <stop offset="50%" stop-color="#444"/>
+          <stop offset="75%" stop-color="#888"/>
+          <stop offset="100%" stop-color="#333"/>
+        </linearGradient>
+      </defs>
+      <rect x="118" y="6" width="64" height="88" rx="10" fill="#0d0d0d" stroke="#1a1a1a" stroke-width="0.5"/>
+      <circle cx="150" cy="190" r="90" fill="#111" stroke="url(#vBezel)" stroke-width="6"/>
+      <circle cx="150" cy="190" r="80" fill="url(#vFace)"/>
+      <g stroke="#b8a882" stroke-width="1" opacity="0.6">
+        <line x1="150" y1="114" x2="150" y2="126"/>
+        <line x1="226" y1="190" x2="214" y2="190"/>
+        <line x1="150" y1="266" x2="150" y2="254"/>
+        <line x1="74" y1="190" x2="86" y2="190"/>
+      </g>
+      <text x="150" y="172" text-anchor="middle" font-family="Georgia,serif" font-size="9" letter-spacing="3" fill="rgba(200,200,190,0.6)">AEVUM</text>
+      <g id="secHand" style="transform-origin: 150px 190px; animation: rotateSec 60s linear infinite;">
+        <line x1="150" y1="118" x2="150" y2="190" stroke="#c0a870" stroke-width="0.8"/>
+        <line x1="150" y1="190" x2="150" y2="208" stroke="#c0a870" stroke-width="1.2"/>
+      </g>
+      <g transform="rotate(180, 150, 190)">
+        <rect x="148" y="135" width="4" height="55" rx="2" fill="#ccc"/>
+      </g>
+      <g transform="rotate(270, 150, 190)">
+        <rect x="149" y="120" width="2" height="70" rx="1" fill="#ccc"/>
+      </g>
+      <circle cx="150" cy="190" r="3.5" fill="#c0a870"/>
+      <rect x="118" y="280" width="64" height="90" rx="10" fill="#0d0d0d" stroke="#1a1a1a" stroke-width="0.5"/>
+    </svg>
+  </div>
+  <div class="video-overlay"></div>
+  <div class="video-content reveal">
+    <div class="video-label">The Atelier Film</div>
+    <h2 class="video-title">Time is not<br>measured.<br><em>It is felt.</em></h2>
+  </div>
+  <style>
+    @keyframes rotateSec {
+      from { transform: rotate(0deg); }
+      to { transform: rotate(360deg); }
+    }
+  </style>
+</section>
+
+<!-- FOOTER -->
+<footer>
+  <div class="footer-inner">
+    <div class="footer-brand">
+      <div class="brand-name">Aevum</div>
+      <p>A sanctuary for those who understand that true luxury is not worn — it is experienced. Since 1921, we have measured time not in seconds, but in moments that last forever.</p>
+    </div>
+    <div class="footer-col">
+      <h4>Maison</h4>
+      <ul>
+        <li><a href="#">Our Heritage</a></li>
+        <li><a href="#">The Atelier</a></li>
+        <li><a href="#">Artisans</a></li>
+        <li><a href="#">Sustainability</a></li>
+      </ul>
+    </div>
+    <div class="footer-col">
+      <h4>Collections</h4>
+      <ul>
+        <li><a href="#">Perpétuelle</a></li>
+        <li><a href="#">Tourbillon</a></li>
+        <li><a href="#">Minute Repeater</a></li>
+        <li><a href="#">Complications</a></li>
+      </ul>
+    </div>
+    <div class="footer-col">
+      <h4>Contact</h4>
+      <ul>
+        <li><a href="#">Boutiques</a></li>
+        <li><a href="#">Private Appointments</a></li>
+        <li><a href="#">After-Sales</a></li>
+        <li><a href="#">Press</a></li>
+      </ul>
+    </div>
+  </div>
+  <div class="footer-bottom">
+    <span class="footer-copy">© 2026 Maison Aevum · Genève, Suisse · All rights reserved</span>
+    <div class="footer-socials">
+      <a href="#">Instagram</a>
+      <a href="#">Pinterest</a>
+      <a href="#">Weibo</a>
+      <a href="#">Newsletter</a>
+    </div>
+  </div>
+</footer>
+
+<script>
+/* ── CURSOR ── */
+const ring = document.getElementById('cursor-ring');
+let mouseX = 0, mouseY = 0, ringX = 0, ringY = 0;
+
+document.addEventListener('mousemove', (e) => {
+  mouseX = e.clientX;
+  mouseY = e.clientY;
+});
+
+(function animateRing() {
+  ringX += (mouseX - ringX) * 0.12;
+  ringY += (mouseY - ringY) * 0.12;
+  ring.style.left = ringX + 'px';
+  ring.style.top = ringY + 'px';
+  requestAnimationFrame(animateRing);
+})();
+
+document.querySelectorAll('a, button, .product-watch-container').forEach(el => {
+  el.addEventListener('mouseenter', () => {
+    ring.style.width = '56px';
+    ring.style.height = '56px';
+    ring.style.borderColor = 'rgba(184,168,130,0.5)';
+  });
+  el.addEventListener('mouseleave', () => {
+    ring.style.width = '36px';
+    ring.style.height = '36px';
+    ring.style.borderColor = 'rgba(245,245,240,0.4)';
+  });
+});
+
+/* ── NAV SCROLL ── */
+const navbar = document.getElementById('navbar');
+window.addEventListener('scroll', () => {
+  navbar.classList.toggle('scrolled', window.scrollY > 60);
+}, { passive: true });
+
+/* ── HERO WATCH SCROLL ZOOM ──
+   As the user scrolls through the hero (0 → 100vh),
+   the watch zooms from scale(1) → scale(2.2)
+   while the hero text fades out smoothly.
+   A golden glow intensifies as the scale grows.
+   The watch itself also gently fades at the very end
+   so the transition into the marquee strip is clean.
+*/
+const heroWatchWrap = document.getElementById('heroWatchWrap');
+const heroWatchSvg  = document.getElementById('heroWatchSvg');
+const heroContent   = document.getElementById('heroContent');
+const heroSection   = document.getElementById('hero');
+
+// Wait for the intro animation to settle before enabling scroll zoom
+let zoomReady = false;
+setTimeout(() => { zoomReady = true; }, 2600);
+
+function lerp(a, b, t) { return a + (b - a) * t; }
+function clamp(v, lo, hi) { return Math.max(lo, Math.min(hi, v)); }
+
+function onHeroScroll() {
+  if (!zoomReady) return;
+
+  const heroH = heroSection.offsetHeight;
+  const scrollY = window.scrollY;
+
+  // progress: 0 at top of hero, 1 when hero is fully scrolled past
+  const progress = clamp(scrollY / heroH, 0, 1);
+
+  /* ── Watch scale: 1 → 2.2 ── */
+  const scale = lerp(1, 2.2, progress);
+
+  /* ── Parallax lift: watch rises slightly ── */
+  const lift = lerp(0, -60, progress);
+
+  /* ── Watch glow brightens with scale ── */
+  const glowAlpha = lerp(0.18, 0.55, progress);
+  const shadowAlpha = lerp(0.9, 0.98, progress);
+  heroWatchSvg.style.filter = `
+    drop-shadow(0 0 ${lerp(80, 200, progress)}px rgba(184,168,130,${glowAlpha}))
+    drop-shadow(0 40px ${lerp(80, 160, progress)}px rgba(0,0,0,${shadowAlpha}))
+  `;
+
+  /* ── Watch fades out in final 20% of scroll ── */
+  const watchFade = clamp(1 - (progress - 0.8) / 0.2, 0, 1);
+
+  heroWatchWrap.style.transform = `translateY(${lift}px) scale(${scale})`;
+  heroWatchWrap.style.opacity   = watchFade;
+
+  /* ── Hero text fades and recedes ── */
+  const textFade = clamp(1 - progress / 0.45, 0, 1);
+  const textLift = lerp(0, -40, clamp(progress / 0.45, 0, 1));
+  heroContent.style.opacity   = textFade;
+  heroContent.style.transform = `translateY(${textLift}px)`;
+}
+
+window.addEventListener('scroll', onHeroScroll, { passive: true });
+onHeroScroll(); // initialise
+
+/* ── CHAPTER ANIMATIONS ── */
+const chapterObserver = new IntersectionObserver((entries) => {
+  entries.forEach(entry => {
+    if (entry.isIntersecting) entry.target.classList.add('in-view');
+  });
+}, { threshold: 0.2, rootMargin: '-60px 0px' });
+
+document.querySelectorAll('.chapter').forEach(el => chapterObserver.observe(el));
+
+/* ── GENERIC REVEALS ── */
+const revealObserver = new IntersectionObserver((entries) => {
+  entries.forEach(entry => {
+    if (entry.isIntersecting) entry.target.classList.add('in-view');
+  });
+}, { threshold: 0.15, rootMargin: '-40px 0px' });
+
+document.querySelectorAll('.reveal').forEach(el => revealObserver.observe(el));
+
+/* ── SPEC ITEMS ── */
+const specObserver = new IntersectionObserver((entries) => {
+  entries.forEach(entry => {
+    if (entry.isIntersecting) {
+      setTimeout(() => entry.target.classList.add('in-view'), entry.target.dataset.delay || 0);
+    }
+  });
+}, { threshold: 0.1 });
+
+document.querySelectorAll('.spec-item').forEach((el, i) => {
+  el.dataset.delay = i * 80;
+  el.style.transitionDelay = (i * 0.08) + 's';
+  specObserver.observe(el);
+});
+
+/* ── PRODUCT SECTION ── */
+const productObserver = new IntersectionObserver((entries) => {
+  entries.forEach(entry => {
+    if (entry.isIntersecting) {
+      entry.target.querySelectorAll('.product-eyebrow, .product-title, .product-subtitle, .product-cta').forEach((el, i) => {
+        el.style.transition = `opacity 0.9s ease ${i * 0.15}s, transform 0.9s ease ${i * 0.15}s`;
+        el.style.opacity = '1';
+        el.style.transform = 'none';
+      });
+    }
+  });
+}, { threshold: 0.2 });
+
+const productSection = document.getElementById('product');
+if (productSection) productObserver.observe(productSection);
+
+/* ── SMOOTH NAV LINKS ── */
+document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+  anchor.addEventListener('click', function(e) {
+    const href = this.getAttribute('href');
+    if (href === '#') return;
+    e.preventDefault();
+    const target = document.querySelector(href);
+    if (target) target.scrollIntoView({ behavior: 'smooth', block: 'start' });
+  });
+});
+</script>
+</body>
+</html>
